@@ -1,28 +1,3 @@
-"""
-This module contains all routines for training GDML and sGDML models.
-"""
-
-# MIT License
-#
-# Copyright (c) 2018-2022 Stefan Chmiela
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
 
 from __future__ import print_function
 
@@ -118,7 +93,7 @@ def _assemble_kernel_mat_wkr(
             Hyper-parameter :math:`\sigma`.
         use_E_cstr : bool, optional
             True: include energy constraints in the kernel,
-            False: default (s)GDML kernel.
+            False: default  kernel.
         exploit_sym : boolean, optional
             Do not create symmetric entries of the kernel matrix twice
             (this only works for spectific inputs for `cols_m_limit`)
@@ -306,7 +281,6 @@ def _assemble_kernel_mat_wkr(
 class FFNetTrain(object):
     def __init__(self, max_memory=None, max_processes=None, use_torch=False):
         """
-        Train sGDML force fields.
 
         This class is used to train models using different closed-form
         and numerical solvers. GPU support is provided
@@ -358,7 +332,7 @@ class FFNetTrain(object):
 
         if use_torch and not _has_torch:
             raise ImportError(
-                'Optional PyTorch dependency not found! Please run \'pip install sgdml[torch]\' to install it or disable the PyTorch option.'
+                'Optional PyTorch dependency not found! '
             )
 
     def __del__(self):
@@ -416,7 +390,7 @@ class FFNetTrain(object):
                 provided in the trainig dataset. No automatic discovery is run when this
                 argument is provided.
             use_sym : bool, optional
-                True: include symmetries (sGDML), False: GDML.
+                True: include symmetries
             use_E : bool, optional
                 True: reconstruct force field with corresponding potential energy surface,
                 False: ignore energy during training, even if energy labels are available
@@ -425,7 +399,7 @@ class FFNetTrain(object):
                        energy predictions accuracy will be untested.
             use_E_cstr : bool, optional
                 True: include energy constraints in the kernel,
-                False: default (s)GDML.
+                False: default
             callback : callable, optional
                 Progress callback function that takes three
                 arguments:
@@ -1286,7 +1260,7 @@ class FFNetTrain(object):
                 Hyper-parameter :math:`\sigma`(kernel length scale).
             use_E_cstr : bool, optional
                 True: include energy constraints in the kernel,
-                False: default (s)GDML kernel.
+                False: default
             callback : callable, optional
                 Kernel assembly progress function that takes three
                 arguments:
@@ -1406,7 +1380,7 @@ class FFNetTrain(object):
         if self._use_torch:
             if not _has_torch:
                 raise ImportError(
-                    'Optional PyTorch dependency not found! Please run \'pip install sgdml[torch]\' to install it or disable the PyTorch option.'
+                    'Optional PyTorch dependency not found! '
                 )
 
             K = np.empty((K_n_rows + alloc_extra_rows, K_n_cols))
@@ -1441,9 +1415,9 @@ class FFNetTrain(object):
             R_desc_torch = torch.from_numpy(R_desc).to(torch_device)  # N, d
             R_d_desc_torch = torch.from_numpy(R_d_desc).to(torch_device)
 
-            from .torchtools import GDMLTorchAssemble
+            from .torchtools import TorchAssemble
 
-            torch_assemble = GDMLTorchAssemble(
+            torch_assemble = TorchAssemble(
                 J,
                 tril_perms_lin,
                 sig,

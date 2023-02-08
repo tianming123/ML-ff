@@ -1,26 +1,5 @@
 #!/usr/bin/python
 
-# MIT License
-#
-# Copyright (c) 2019-2022 Stefan Chmiela, Jan Hermann
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
 
 import os
 import sys
@@ -61,7 +40,7 @@ MAX_PRINT_WIDTH = 100
 LOG_LEVELNAME_WIDTH = 7
 RESET_SEQ = '\033[0m'
 
-class GDMLTorchAssemble(nn.Module):
+class TorchAssemble(nn.Module):
     """
     PyTorch version of the kernel assembly routines in :class:`~predict.GDMLTrain`.
     Derives from :class:`torch.nn.Module`. Contains no trainable parameters.
@@ -81,7 +60,7 @@ class GDMLTorchAssemble(nn.Module):
 
         global _n_batches, _n_perm_batches
 
-        super(GDMLTorchAssemble, self).__init__()
+        super(TorchAssemble, self).__init__()
 
         self._log = logging.getLogger(__name__)
 
@@ -395,7 +374,7 @@ class GDMLTorchAssemble(nn.Module):
                     break
 
 
-class GDMLTorchPredict(nn.Module):
+class TorchPredict(nn.Module):
     """
     PyTorch version of :class:`~predict.GDMLPredict`. Derives from
     :class:`torch.nn.Module`. Contains no trainable parameters.
@@ -430,7 +409,7 @@ class GDMLTorchPredict(nn.Module):
 
         global _batch_size, _n_perm_batches
 
-        super(GDMLTorchPredict, self).__init__()
+        super(TorchPredict, self).__init__()
 
         self._log = logging.getLogger(__name__)
         if log_level is not None:

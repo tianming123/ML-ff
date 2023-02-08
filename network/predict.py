@@ -1,28 +1,4 @@
-"""
-This module contains all routines for evaluating GDML and sGDML models.
-"""
 
-# MIT License
-#
-# Copyright (c) 2018-2022 Stefan Chmiela, Gregory Fonseca
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
 
 from __future__ import print_function
 
@@ -257,8 +233,6 @@ class FFNetPredict(object):
         log_level=None,
     ):
         """
-        Query trained sGDML force fields.
-
         This class is used to load a trained model and make energy and
         force predictions for new geometries. GPU support is provided
         through PyTorch (requires optional `torch` dependency to be
@@ -277,8 +251,7 @@ class FFNetPredict(object):
         ----------
                 model : :obj:`dict`
                         Data structure that holds all parameters of the
-                        trained model. This object is the output of
-                        `GDMLTrain.train`
+                        trained model.
                 batch_size : int, optional
                         Chunk size for processing parallel tasks
                 num_workers : int, optional
@@ -301,10 +274,7 @@ class FFNetPredict(object):
         if 'globs' not in globals():
             globs = []
 
-        # Create a personal global space for this model at a new index
-        # Note: do not call delete entries in this list, since 'self.glob_id' is
-        # static. Instead, setting them to None conserves positions while still
-        # freeing up memory.
+
         globs.append({})
         self.glob_id = len(globs) - 1
         glob = globs[self.glob_id]
@@ -362,9 +332,9 @@ class FFNetPredict(object):
                     'Optional PyTorch dependency not found! Please run \'pip install sgdml[torch]\' to install it or disable the PyTorch option.'
                 )
 
-            from .torchtools import GDMLTorchPredict
+            from .torchtools import TorchPredict
 
-            self.torch_predict = GDMLTorchPredict(
+            self.torch_predict = TorchPredict(
                 model,
                 self.lat_and_inv,
                 max_memory=max_memory,
@@ -476,36 +446,6 @@ class FFNetPredict(object):
         if 'globs' in globals() and globs is not None and self.glob_id < len(globs):
             globs[self.glob_id] = None
 
-    ## Public ##
-
-    # def set_R(self, R):
-    #     """
-    #     Store a reference to the training geometries.
-    #     This function is used to avoid unnecessary copies of the
-    #     traininig geometries when evaluation the training error
-    #     (= gradient of the model's loss function).
-
-    #     This routine is used during iterative model training.
-
-    #     Parameters
-    #     ----------
-    #     R : :obj:`numpy.ndarray`
-    #         Array containing the geometry for each training point.
-    #     """
-
-    #     # Add singleton dimension if input is (,3N).
-    #     if R.ndim == 1:
-    #         R = R[None, :]
-
-    #     self.R = R
-
-    #     # if self.use_torch:
-    #     #     model = self.torch_predict
-    #     #     if isinstance(self.torch_predict, torch.nn.DataParallel):
-    #     #         model = model.module
-
-    #     #     R_torch = torch.from_numpy(R.reshape(-1, self.n_atoms, 3)).to(self.torch_device)
-    #     #     model.set_R(R_torch)
 
     def set_R_desc(self, R_desc):
         """
