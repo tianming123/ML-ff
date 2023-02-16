@@ -597,13 +597,13 @@ def model_train(
                     )
             has_converged_once = has_converged_once or is_conv
             # 拐点，训练损失降低，验证损失提高
-            if (
-                    has_converged_once
-                    and prev_valid_err != -1
-                    and prev_valid_err < valid_errs[0]
-            ):
-                print('验证损失再次升高，提前结束剩余训练任务')
-                break
+            # if (
+            #         has_converged_once
+            #         and prev_valid_err != -1
+            #         and prev_valid_err < valid_errs[0]
+            # ):
+            #     print('验证损失再次升高，提前结束剩余训练任务')
+            #     break
 
             prev_valid_err = valid_errs[0]
     model_dir_or_file_path = model_file_path if n_tasks == 1 else task_dir
